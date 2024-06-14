@@ -1,0 +1,19 @@
+# Django related files
+manage.py
+wsgi.py
+asgi.py
+
+# Python cache files
+__pycache__
+__init__.py
+
+# Virtual environment files
+/bin
+/lib
+pyvenv.cfg
+
+# Environment variables
+.env
+
+# Local SQLite database
+db.sqlite3
