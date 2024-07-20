@@ -18,7 +18,9 @@ SECRET_KEY =  os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 
 # Application definition
@@ -40,9 +42,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
