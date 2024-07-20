@@ -3,6 +3,18 @@
   "semi": false,
   "tabWidth": 2,
   "singleQuote": true,
-  "printWidth": 100,
-  "trailingComma": "none"
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "htmlWhitespaceSensitivity": "css",
+  "jsxBracketSameLine": false,
+  "proseWrap": "always",
+  "no-multiple-empty-lines": [
+    "error",
+    {
+      "max": 1,
+      "maxEOF": 0
+    }
+  ]
 }
