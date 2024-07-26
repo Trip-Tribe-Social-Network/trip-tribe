@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
-from .models import User
+from account.models import User
 
 class AccountTests(APITestCase):
     def test_signup_success(self):
