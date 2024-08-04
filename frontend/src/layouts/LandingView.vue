@@ -1,16 +1,24 @@
 <template>
   <div id="home">
     <v-layout class="d-flex justify-center align-center">
-      <v-app-bar class="px-6" flat>
+      <v-app-bar class="px-8 py-2" flat>
         <div class="d-flex justify-center align-center flex-column">
-          <v-img :src="logo" :width="40" class="text-center" />
+          <v-img :src="logo" :width="150" class="text-center ma-4" />
         </div>
-        <v-app-bar-title class="text-h5 font-weight-black title"
-          >trip tribe</v-app-bar-title
-        >
         <template v-slot:append>
-          <v-btn @click="navigate('/login')" variant="outlined">Login</v-btn>
-          <v-btn @click="navigate('/')" variant="text">Signup</v-btn>
+          <v-btn
+            @click="navigate('/')"
+            text="Login"
+            variant="text"
+            class="mr-4"
+            color="pink-accent-3"
+          />
+          <v-btn
+            @click="navigate('/signup')"
+            text="Create an account"
+            variant="flat"
+            color="pink-accent-3"
+          />
         </template>
       </v-app-bar>
       <v-main
@@ -24,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
+import logo from '@/assets/logo.png'
 import { navigate } from '@/utils/global'
-import logo from '@/assets/logo.svg'
 </script>
 
 <style scoped>
@@ -34,8 +42,8 @@ import logo from '@/assets/logo.svg'
   background-color: white;
 }
 
-.title {
-  font-family: 'Hind Vadodara', sans-serif;
+body {
+  overflow-y: scroll;
 }
 
 .main {
