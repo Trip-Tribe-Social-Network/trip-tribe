@@ -35,8 +35,15 @@
       class="mb-4"
     />
     <v-card-actions class="pa-0 justify-end">
-      <v-btn variant="flat" color="black" type="submit">Sign Up</v-btn>
-      <v-btn variant="outlined" @click="reset">Reset</v-btn>
+      <v-btn
+        class="px-2"
+        variant="flat"
+        text="Sign up"
+        color="pink-accent-3"
+        type="submit"
+        width="100%"
+        size="large"
+      />
     </v-card-actions>
   </v-form>
 </template>
@@ -50,10 +57,10 @@ import {
 } from '@/utils/validationRules'
 import router from '@/router'
 import { computed, ref } from 'vue'
-import type { SignupFormData } from '@/models/user'
-import type { VForm } from 'vuetify/components'
-import type { Notification } from '@/models/global'
 import { useUserStore } from '@/stores/user'
+import type { VForm } from 'vuetify/components'
+import type { SignupFormData } from '@/models/user'
+import type { Notification } from '@/models/global'
 
 const store = useUserStore()
 
@@ -62,7 +69,6 @@ const emit = defineEmits<{
 }>()
 
 const visible = ref<boolean>(false)
-
 const email = ref<string>()
 const name = ref<string>()
 const password1 = ref<string>()
@@ -72,16 +78,6 @@ const form = ref<VForm | null>(null)
 const confirmPasswordValidation = computed(() => {
   return confirmPasswordRules(password1.value || '')
 })
-
-const reset = (): void => {
-  email.value = ''
-  name.value = ''
-  password1.value = ''
-  password2.value = ''
-  if (form.value) {
-    form.value.resetValidation()
-  }
-}
 
 const signup = async (): Promise<void> => {
   if (form.value) {

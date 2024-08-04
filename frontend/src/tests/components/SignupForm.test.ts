@@ -4,7 +4,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify } from 'vuetify'
 import SignupForm from '@/components/signup/SignupForm.vue'
-import { createPinia } from 'pinia'
+import { createTestingPinia } from '@pinia/testing'
 import axios from 'axios'
 
 const vuetify = createVuetify({ components, directives })
@@ -13,12 +13,14 @@ describe('SignupForm', () => {
   let wrapper: any
 
   const createSignupFormComponent = () => {
-    const pinia = createPinia()
-    pinia.state.value = { ...pinia.state.value }
-
     return render(SignupForm, {
       global: {
-        plugins: [vuetify, pinia]
+        plugins: [
+          vuetify,
+          createTestingPinia({
+            stubActions: false
+          })
+        ]
       }
     })
   }
@@ -31,7 +33,7 @@ describe('SignupForm', () => {
       wrapper.getByLabelText('Confirm password'),
       'Password1!'
     )
-    await fireEvent.click(wrapper.getByText('Sign Up'))
+    await fireEvent.click(wrapper.getByText('Sign up'))
   }
 
   beforeEach(() => {
