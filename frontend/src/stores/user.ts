@@ -1,7 +1,12 @@
-import { defineStore } from 'pinia'
-import type { User, TokenData, SignupFormData } from '@/models/user'
-import axios from 'axios'
 import { ref } from 'vue'
+import axios from 'axios'
+import { defineStore } from 'pinia'
+import type {
+  User,
+  TokenData,
+  SignupFormData,
+  LoginFormData
+} from '@/models/user'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User>({
@@ -60,6 +65,23 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  const getBaseUser = (): Promise<User> => {
+    return new Promise((resolve, reject) => {
+      if (user.value.access) {
+        axios.defaults.headers.common['Authorization'] =
+          `Bearer ${user.value.access}`
+      }
+
+      axios
+        .get('/api/me/')
+        .then(response => {
+          resolve(response.data)
+          setUserInfo(response.data)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
   const refreshToken = async (): Promise<void> => {
     try {
       const response = await axios.post('/api/refresh/', {
@@ -88,6 +110,18 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  const login = (loginFormData: LoginFormData): Promise<TokenData> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post('/api/login/', loginFormData)
+        .then(response => {
+          const TokenDataResponse = setToken(response.data)
+          resolve(TokenDataResponse)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
   return {
     user,
     initializeStore,
@@ -95,7 +129,9 @@ export const useUserStore = defineStore('user', () => {
     setToken,
     setUserInfo,
     refreshToken,
+    getBaseUser,
     logout,
+    login,
     signup
   }
 })
