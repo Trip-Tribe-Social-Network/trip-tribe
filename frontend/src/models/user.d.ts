@@ -14,6 +14,11 @@ export interface SignupFormData {
   password2: string | undefined
 }
 
+export interface LoginFormData {
+  email: string | undefined
+  password: string | undefined
+}
+
 export type TokenData = {
   access: string
   refresh: string
