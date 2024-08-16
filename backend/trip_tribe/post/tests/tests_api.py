@@ -3,8 +3,6 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from post.models import Post
-from django.core.exceptions import ObjectDoesNotExist
-import uuid
 
 User = get_user_model()
 
