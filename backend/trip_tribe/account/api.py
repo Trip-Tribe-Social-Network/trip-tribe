@@ -1,11 +1,12 @@
 from django.http import JsonResponse
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
 
-from .forms import SignupForm
+from .forms import SignupForm, ProfileForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
-
 
 @api_view(['GET'])
 def me(request):
@@ -13,8 +14,27 @@ def me(request):
         'id': request.user.id,
         'name': request.user.name,
         'email': request.user.email,
+        'avatar': request.user.get_avatar(),
+        'friends': UserSerializer(request.user.friends.all(), many=True).data
     })
 
+@api_view(['POST']) 
+def edit_profile(request):
+    user = request.user
+    email = request.data.get('email')
+
+    if User.objects.exclude(id=user.id).filter(email=email).exists():
+        return JsonResponse({'message': 'email already exists'})
+    else:
+        print(request.FILES)
+        print(request.POST)
+
+        form = ProfileForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+
+        return JsonResponse({'message': 'information updated'})
 
 @api_view(['POST'])
 @authentication_classes([])
@@ -38,11 +58,10 @@ def signup(request):
 
     return JsonResponse({'status': message})
 
-
 @api_view(['GET'])
 def friends(request, pk):
     user = User.objects.get(pk=pk)
-    request = []
+    request_list = []
 
     u = request.user
     u.friends_count = 1
@@ -54,29 +73,29 @@ def friends(request, pk):
     if user == request.user:
         requests = FriendshipRequest.objects.filter(created_for=request.user, status=FriendshipRequest.SENT)
         requests = FriendshipRequestSerializer(requests, many=True)
-        requests = requests.data
+        request_list = requests.data
 
     friends = user.friends.all()
 
     return JsonResponse({
         'user': UserSerializer(user).data,
         'friends': UserSerializer(friends, many=True).data,
-        'requests': requests,
-    }, safe=False)
+        'requests': request_list,
+    })
 
 @api_view(['POST'])
 def send_friendship_request(request, pk):
     user = User.objects.get(pk=pk)
 
-    check1 = FriendshipRequest.objects.filter(created_for=request.user).filter(created_by=user)
-    check2 = FriendshipRequest.objects.filter(created_for=user).filter(created_by=request.user)
+    existing_request = FriendshipRequest.objects.filter(
+        created_for=user, created_by=request.user
+    ).exclude(status=FriendshipRequest.REJECTED).exists()
 
-    if not check1 or not check2:
+    if not existing_request:
         FriendshipRequest.objects.create(created_for=user, created_by=request.user)
-        
-        return JsonResponse({'message': 'friendship request created'})
+        return JsonResponse({'message': 'Friendship request created'})
     else:
-        return JsonResponse({'message': 'request already sent'})
+        return JsonResponse({'message': 'Request already sent'})
 
 
 @api_view(['POST'])

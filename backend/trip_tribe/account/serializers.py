@@ -3,9 +3,10 @@ from .models import User, FriendshipRequest
 
 
 class UserSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'friends_count',)
+        fields = ('id', 'name', 'email', 'friends_count', 'get_avatar', 'friends')
 
 
 class FriendshipRequestSerializer(serializers.ModelSerializer):
@@ -13,4 +14,4 @@ class FriendshipRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendshipRequest
-        fields = ('id', 'created_by',) 
+        fields = ('id', 'created_by', 'status', 'created_at')
