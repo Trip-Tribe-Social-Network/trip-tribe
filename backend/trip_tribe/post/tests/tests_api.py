@@ -55,3 +55,20 @@ class PostAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['body'], 'New Post')
         self.assertEqual(response.json()['created_by']['name'], 'testuser')
+
+    def test_post_delete(self):
+        self.assertTrue(Post.objects.filter(id=self.post.id).exists(), "The post should exist before deletion.")
+        url = reverse('post_delete', args=[self.post.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['message'], 'Post deleted')
+        self.assertFalse(Post.objects.filter(id=self.post.id).exists())
+
+    def test_post_report(self):
+        url = reverse('post_report', args=[self.friend_post.id])
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['message'], 'post reported')
+
+        self.friend_post.refresh_from_db()
+        self.assertIn(self.user, self.friend_post.reported_by_users.all())
