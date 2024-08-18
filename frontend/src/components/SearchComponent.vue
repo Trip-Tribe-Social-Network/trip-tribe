@@ -1,20 +1,19 @@
 <template>
   <v-autocomplete
     :items="users"
-    class="mx-auto"
     density="compact"
+    bg-color="white"
     type="search"
     v-model="searchTerm"
     item-title="name"
     @input="searchProfiles"
-    prepend-inner-icon="mdi-magnify"
-    style="max-width: 350px"
-    variant="outlined"
+    append-inner-icon="mdi-magnify"
+    variant="solo"
     auto-select-first
     item-props
+    clearable
     hide-details
     hide-spin-buttons
-    rounded
   >
     <template v-slot:item="{ props, item }">
       <v-list-item
