@@ -1,11 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import ProfileCard from '@/components/profile/ProfileCard.vue'
-import {
-  CURRENT_USER_PROFILE,
-  TARGET_USER_PROFILE,
-  PROFILE_FRIENDS
-} from '@/tests/mocks/profile'
+import { CURRENT_USER_PROFILE, TARGET_USER_PROFILE } from '@/tests/mocks/profile'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify } from 'vuetify'
@@ -21,8 +17,7 @@ describe('ProfileCard', () => {
     return render(ProfileCard, {
       props: {
         user: profileData.user,
-        posts: profileData.posts,
-        friends: PROFILE_FRIENDS.friends
+        posts: profileData.posts
       },
       global: {
         plugins: [

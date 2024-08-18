@@ -17,7 +17,7 @@
         <v-row justify="center">
           <v-col class="d-flex justify-center align-center" cols="12">
             <v-avatar
-              :image="avatarUrl ?? user.get_avatar ?? avatarImg"
+              :image="avatarUrl ?? (user.get_avatar ? user.get_avatar : avatarImg)"
               size="180"
               class="profile"
             />

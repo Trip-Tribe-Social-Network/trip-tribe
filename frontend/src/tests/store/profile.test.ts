@@ -1,10 +1,6 @@
 import { describe, beforeEach, test, expect, vi } from 'vitest'
 import { useProfileStore } from '@/stores/profile'
-import {
-  CURRENT_USER_PROFILE,
-  PROFILE_FRIENDS,
-  EDIT_PROFILE_FORM
-} from '@/tests/mocks/profile'
+import { CURRENT_USER_PROFILE, EDIT_PROFILE_FORM } from '@/tests/mocks/profile'
 import { createPinia, setActivePinia } from 'pinia'
 import axios from 'axios'
 
@@ -22,14 +18,6 @@ describe('profile store', () => {
     expect(spy).toHaveBeenCalledWith(
       `/api/posts/profile/${CURRENT_USER_PROFILE.user.id}/`
     )
-  })
-  test('get profile friends success', async () => {
-    const store = useProfileStore()
-
-    axios.get = vi.fn().mockResolvedValue({ data: PROFILE_FRIENDS })
-    const spy = vi.spyOn(axios, 'get')
-    await store.getFriends('1')
-    expect(spy).toHaveBeenCalledWith('/api/friends/1/')
   })
   test('edit user profile success', async () => {
     const store = useProfileStore()
