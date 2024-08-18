@@ -80,7 +80,8 @@ class FriendshipTests(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(FriendshipRequest.objects.filter(created_by=self.user1, created_for=self.user2).count(), 1)
-        self.assertEqual(response.json()['message'], 'friendship request created')
+        self.assertEqual(response.json()['message'], 'Friendship request created')
+
 
     # def test_send_duplicate_friendship_request(self):
     #     # Authenticate as user1
