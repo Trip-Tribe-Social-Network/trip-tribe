@@ -19,9 +19,7 @@ const vuetify = createVuetify({ components, directives })
 
 describe('LoginForm', () => {
   let wrapper: any
-  const createLoginFormComponent = (
-    initialState = { user: { user: USER_STATE } }
-  ) => {
+  const createLoginFormComponent = (initialState = { profile: { user: USER_STATE } }) => {
     return render(LoginForm, {
       global: {
         plugins: [
