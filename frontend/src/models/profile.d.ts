@@ -8,6 +8,7 @@ export interface UserProfile {
   name: string
   email: string
   get_avatar: string | undefined
+  friends: string[]
   friends_count: number
 }
 export interface Post {

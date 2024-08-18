@@ -27,7 +27,7 @@
       <v-list class="d-flex justify-center">
         <v-list-item>
           <div class="d-flex flex-column justify-center align-center">
-            <p class="font-weight-bold">{{ friends?.length || 0 }}</p>
+            <p class="font-weight-bold">{{ user.friends?.length || 0 }}</p>
             <p class="text-caption">Friends</p>
           </div>
         </v-list-item>
@@ -55,7 +55,6 @@
 import { computed, ref } from 'vue'
 import ProfileEdit from '@/components/profile/ProfileEdit.vue'
 import type { UserProfile } from '@/models/profile'
-import type { UserFriend } from '@/models/friends'
 import type { Notification } from '@/models/global'
 import type { Post } from '@/models/post'
 import { useFriendsStore } from '@/stores/friends'
@@ -67,7 +66,6 @@ import { userUUID } from '@/utils/global'
 const props = defineProps<{
   posts: Post[]
   user: UserProfile
-  friends: UserFriend[]
 }>()
 
 const route = useRoute()
@@ -89,7 +87,7 @@ const handleCloseDialog = () => {
 const isRequestButtonVisible = computed(() => {
   return (
     props.user.id !== userUUID() &&
-    !store.friends.some((friend: UserFriend) => friend.id === props.user.id)
+    !props.user.friends.some(friend => friend === userUUID())
   )
 })
 
