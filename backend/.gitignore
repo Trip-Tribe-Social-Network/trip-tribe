@@ -6,6 +6,7 @@ __init__.py
 /bin
 /lib
 pyvenv.cfg
+env
 
 # Environment variables
 .env
