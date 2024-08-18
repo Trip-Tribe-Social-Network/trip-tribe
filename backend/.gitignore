@@ -13,3 +13,6 @@ env
 
 # Local SQLite database
 db.sqlite3
+
+# Django media files
+media

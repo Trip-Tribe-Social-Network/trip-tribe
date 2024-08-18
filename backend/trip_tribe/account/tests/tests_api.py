@@ -1,7 +1,8 @@
 from django.urls import reverse
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
+from django.contrib.auth import get_user_model 
 from rest_framework import status
-from account.models import User
+from account.models import User, FriendshipRequest
 
 class AccountTests(APITestCase):
     def test_signup_success(self):
@@ -80,6 +81,7 @@ class FriendshipTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(FriendshipRequest.objects.filter(created_by=self.user1, created_for=self.user2).count(), 1)
         self.assertEqual(response.json()['message'], 'Friendship request created')
+
 
     # def test_send_duplicate_friendship_request(self):
     #     # Authenticate as user1
