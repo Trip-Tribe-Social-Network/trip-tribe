@@ -1,12 +1,6 @@
 <template>
   <v-container fluid>
-    <ProfileCard
-      v-if="user"
-      :user="user"
-      :posts="posts"
-      :friends="store.friends"
-      @show-snackbar="showSnackbar"
-    />
+    <ProfileCard v-if="user" :user="user" :posts="posts" @show-snackbar="showSnackbar" />
     <PostCard class="mx-2 my-4" v-for="post in posts" :key="post.id" :post="post" />
   </v-container>
   <AlertComponent :alert="appSnackbarConf" />
@@ -36,20 +30,13 @@ const route = useRoute()
 const store = useProfileStore()
 const user = computed(() => store.user)
 const posts = computed<Post[]>(() => store.posts)
+const userId = route.params.id as string
 
-const loadUserData = (userId: string) => {
-  store
-    .getFriends(userId)
-    .then(() => store.getFeed(userId))
-    .catch(error => {
-      console.error('Error loading user data:', error)
-    })
-}
+store.getFeed(userId)
 
 onMounted(() => {
-  const userId = route.params.id as string
   if (userId) {
-    loadUserData(userId)
+    store.getFeed(userId)
   }
 })
 
@@ -57,7 +44,7 @@ watch(
   () => route.params.id,
   async newId => {
     if (newId) {
-      await loadUserData(newId as string)
+      await store.getFeed(newId as string)
     }
   }
 )
