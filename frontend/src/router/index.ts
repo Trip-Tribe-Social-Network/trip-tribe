@@ -39,12 +39,12 @@ const routes = [
     component: Feed
   },
   {
-    path: '/friends',
+    path: '/profile/:id/friends',
     name: 'friends',
     component: Friends
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'profile',
     component: Profile
   }
