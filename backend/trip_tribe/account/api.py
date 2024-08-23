@@ -15,6 +15,7 @@ def me(request):
         'name': request.user.name,
         'email': request.user.email,
         'avatar': request.user.get_avatar(),
+        'bio': request.user.bio,  
         'friends': UserSerializer(request.user.friends.all(), many=True).data
     })
 
