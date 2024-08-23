@@ -1,10 +1,5 @@
 <template>
-  <v-list
-    lines="two"
-    :key="friend.id"
-    v-for="friend in friends"
-    class="d-flex align-center"
-  >
+  <v-list :key="friend.id" v-for="friend in friends" class="d-flex align-center">
     <v-avatar data-testid="avatar" :image="friend.get_avatar || avatar" />
     <v-list-item>{{ friend.name }}</v-list-item>
     <v-spacer></v-spacer>

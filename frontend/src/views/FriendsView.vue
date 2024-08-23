@@ -4,7 +4,7 @@
       <v-tab value="one">Friends ({{ store.friends.length }})</v-tab>
       <v-tab value="two">Requests ({{ sentRequestsCount }})</v-tab>
     </v-tabs>
-    <v-card-text>
+    <v-card-text class="friends-page">
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
           <FriendsCard />
@@ -46,4 +46,8 @@ const sentRequestsCount = computed(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.friends-page {
+  overflow-y: scroll;
+}
+</style>
