@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <ProfileCard v-if="user" :user="user" :posts="posts" @show-snackbar="showSnackbar" />
-    <PostCard class="mx-2 my-4" v-for="post in posts" :key="post.id" :post="post" />
+    <PostCard class="my-4" v-for="post in posts" :key="post.id" :post="post" />
   </v-container>
   <AlertComponent :alert="appSnackbarConf" />
 </template>

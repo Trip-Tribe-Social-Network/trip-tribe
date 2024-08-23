@@ -32,6 +32,13 @@
             label="Avatar"
             @change="handleFileChange"
           />
+          <v-textarea
+            placeholder="bio"
+            rows="2"
+            v-model="user.bio"
+            :rules="counterRules"
+            counter="100"
+          ></v-textarea>
           <v-card-actions class="d-flex justify-center ma-4">
             <v-spacer></v-spacer>
             <v-btn
@@ -58,6 +65,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { userUUID } from '@/utils/global'
+import { counterRules } from '@/utils/validationRules'
 import type { Notification } from '@/models/global'
 import type { UserProfile } from '@/models/profile'
 import { useProfileStore } from '@/stores/profile'
@@ -92,27 +100,31 @@ const handleFileChange = (event: Event) => {
 
 const editProfile = async () => {
   if (user.value && form.value) {
-    const formData = new FormData()
-    formData.append('name', user.value.name)
-    formData.append('email', user.value.email)
-    if (avatar.value) {
-      formData.append('avatar', avatar.value)
+    const { valid } = await form.value.validate()
+    if (valid) {
+      const formData = new FormData()
+      formData.append('name', user.value.name)
+      formData.append('email', user.value.email)
+      formData.append('bio', user.value.bio)
+      if (avatar.value) {
+        formData.append('avatar', avatar.value)
+      }
+      store
+        .editUserProfile(formData)
+        .then(() => {
+          emit('show-snackbar', {
+            type: 'success',
+            message: 'Profile successfully updated'
+          })
+          emit('close-dialog')
+        })
+        .catch(() => {
+          emit('show-snackbar', {
+            type: 'error',
+            message: 'Failed to update profile'
+          })
+        })
     }
-    store
-      .editUserProfile(formData)
-      .then(() => {
-        emit('show-snackbar', {
-          type: 'success',
-          message: 'Profile successfully updated'
-        })
-        emit('close-dialog')
-      })
-      .catch(() => {
-        emit('show-snackbar', {
-          type: 'error',
-          message: 'Failed to update profile'
-        })
-      })
   }
 }
 </script>
