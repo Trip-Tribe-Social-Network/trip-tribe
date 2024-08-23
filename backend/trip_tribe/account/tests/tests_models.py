@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from ..models import FriendshipRequest
+from django.core.files.uploadedfile import SimpleUploadedFile
+import base64
 
 User = get_user_model()
 
@@ -41,6 +43,55 @@ class UserModelTest(TestCase):
         self.assertTrue(superuser.is_staff)
         self.assertTrue(superuser.is_superuser)
 
+    def test_avatar_upload(self):
+        base64_image_data = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAUA"
+            "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO"
+            "9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        )
+        image_data = base64.b64decode(base64_image_data)
+        avatar = SimpleUploadedFile("test_image.png", image_data, content_type="image/png")
+        
+        self.user.avatar = avatar
+        self.user.save()
+        self.user.refresh_from_db()
+        
+        self.assertTrue(self.user.avatar.name.startswith('avatars/test_image'))
+        self.assertTrue(self.user.avatar.size > 0)
+
+    def test_get_avatar(self):
+        self.assertEqual(self.user.get_avatar(), '')
+
+        base64_image_data = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAUA"
+            "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO"
+            "9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        )
+        image_data = base64.b64decode(base64_image_data)
+        avatar = SimpleUploadedFile("test_image.png", image_data, content_type="image/png")
+        
+        self.user.avatar = avatar
+        self.user.save()
+
+        expected_url = f'http://127.0.0.1:8000{self.user.avatar.url}'
+        self.assertEqual(self.user.get_avatar(), expected_url)
+
+    def test_posts_count(self):
+        # Ensure the posts_count starts at 0
+        self.assertEqual(self.user.posts_count, 0)
+        
+        self.user.posts_count = 5
+        self.user.save()
+        
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.posts_count, 5)
+
+    def test_update_posts_count(self):
+        self.user.posts_count += 1
+        self.user.save()
+        
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.posts_count, 1)
 
 class FriendshipRequestModelTest(TestCase):
     def setUp(self):

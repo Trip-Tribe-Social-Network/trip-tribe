@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth import get_user_model 
 from rest_framework import status
 from account.models import User, FriendshipRequest
+import json
 
 class AccountTests(APITestCase):
     def test_signup_success(self):
@@ -40,11 +41,42 @@ class AccountTests(APITestCase):
         self.assertEqual(response.json()['id'], str(user.id))
         self.assertEqual(response.json()['name'], user.name)
         self.assertEqual(response.json()['email'], user.email)
+        self.assertEqual(response.json()['avatar'], user.get_avatar())
 
     def test_me_unauthenticated(self):
         url = reverse('me')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_edit_profile_email_already_exists(self):
+        user = User.objects.create_user(name='someone', email='someone@example.com', password='testpassword')
+        self.client.force_authenticate(user=user)
+        
+        another_user = User.objects.create_user(name='anotheruser', email='existing@example.com', password='password')
+        url = reverse('edit_profile')
+        data = {'email': 'existing@example.com'}
+
+        response = self.client.post(url, data=json.dumps(data), content_type='application/json')
+        response_data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data['message'], 'email already exists')
+
+    def test_edit_profile_success(self):
+        user = User.objects.create_user(name='testuser', email='testuser@example.com', password='strongpassword123')
+        self.client.force_authenticate(user=user)
+        
+        url = reverse('edit_profile')
+        data = {'name': 'newname', 'email': 'newemail@example.com'}
+        response = self.client.post(url, data, format='multipart')
+
+        user.refresh_from_db()
+        response_data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data['message'], 'information updated')
+        self.assertEqual(user.name, 'newname')
+        self.assertEqual(user.email, 'newemail@example.com')
 
 class FriendshipTests(APITestCase):
 

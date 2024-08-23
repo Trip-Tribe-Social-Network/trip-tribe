@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from post.models import Post, PostAttachment
+from post.models import Post, PostAttachment, Trend
 import uuid
 
 User = get_user_model()
@@ -34,3 +34,18 @@ class PostAttachmentModelTest(TestCase):
         self.assertEqual(self.attachment.image, 'path/to/image.jpg')
         self.assertEqual(self.attachment.created_by, self.user)
         self.assertTrue(isinstance(self.attachment.id, uuid.UUID))
+
+class TrendModelTest(TestCase):
+    def setUp(self):
+        self.trend = Trend.objects.create(hashtag='newtrend', occurences=10)
+    
+    def test_trend_creation(self):
+        self.assertEqual(self.trend.hashtag, 'newtrend')
+        self.assertEqual(self.trend.occurences, 10)
+    
+    def test_trend_occurences_update(self):
+        self.trend.occurences = 20
+        self.trend.save()
+        
+        self.trend.refresh_from_db()
+        self.assertEqual(self.trend.occurences, 20)
