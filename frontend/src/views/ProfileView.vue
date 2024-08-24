@@ -32,8 +32,6 @@ const user = computed(() => store.user)
 const posts = computed<Post[]>(() => store.posts)
 const userId = route.params.id as string
 
-store.getFeed(userId)
-
 onMounted(() => {
   if (userId) {
     store.getFeed(userId)
