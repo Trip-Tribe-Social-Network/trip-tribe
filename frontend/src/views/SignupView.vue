@@ -7,11 +7,10 @@
     <v-card variant="flat" width="90%">
       <p class="text-h3 text-center mb-4">Create Account</p>
       <v-card-text class="text-body-1 py-6 mb-4 px-0 text-justify content">
-        Dive into a vibrant community of fellow explorers. Connect with
-        like-minded emily who share your passion for exploration. Discover new
-        destinations with recommendations and tips from those who’ve been there
-        before. Your journey starts here. Embrace the world, one connection at a
-        time!
+        Dive into a vibrant community of fellow explorers. Connect with like-minded emily
+        who share your passion for exploration. Discover new destinations with
+        recommendations and tips from those who’ve been there before. Your journey starts
+        here. Embrace the world, one connection at a time!
       </v-card-text>
       <SignupForm @show-snackbar="showSnackbar" />
     </v-card>
@@ -23,10 +22,7 @@
     height="800px"
   >
     <v-carousel :show-arrows="false" height="100%" hide-delimiter-background>
-      <v-carousel-item
-        v-for="(testimonial, index) in testimonials"
-        :key="index"
-      >
+      <v-carousel-item v-for="(testimonial, index) in testimonials" :key="index">
         <TestimonialComponent
           :image="testimonial.image"
           :name="testimonial.name"
@@ -47,7 +43,7 @@ import AlertComponent from '@/components/AlertComponent.vue'
 import SignupForm from '@/components/signup/SignupForm.vue'
 import TestimonialComponent from '@/components/signup/TestimonialComponent.vue'
 import emily from '@/assets/emily.jpeg'
-import lukas from '@/assets/lukas.jpeg'
+import lukas from '@/assets/lukas.jpg'
 import sofia from '@/assets/sofia.jpeg'
 
 const { smAndDown } = useDisplay()

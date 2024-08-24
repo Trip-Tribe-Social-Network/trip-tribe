@@ -7,14 +7,14 @@
         </div>
         <template v-slot:append>
           <v-btn
-            @click="navigate('/')"
+            to="/"
             text="Login"
             variant="text"
             class="mr-4"
             color="pink-accent-3"
           />
           <v-btn
-            @click="navigate('/signup')"
+            to="/signup"
             text="Create an account"
             variant="flat"
             color="pink-accent-3"
@@ -33,7 +33,6 @@
 
 <script setup lang="ts">
 import logo from '@/assets/logo.png'
-import { navigate } from '@/utils/global'
 </script>
 
 <style scoped>

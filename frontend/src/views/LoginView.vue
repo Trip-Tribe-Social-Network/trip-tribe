@@ -9,11 +9,10 @@
         <p class="text-h3 font-weight-medium">Log in</p>
       </div>
       <v-card-text class="text-body-1 py-8 px-0 text-justify content">
-        Reconnect with your community of travelers and immerse yourself in the
-        world of exploration once again. Share your latest adventures, whether
-        you've scaled mountain peaks, wandered through ancient ruins, or
-        discovered hidden gems in bustling cities. Your travel experiences and
-        connections await, Welcome back!
+        Reconnect with your community of travelers and immerse yourself in the world of
+        exploration once again. Share your latest adventures, whether you've scaled
+        mountain peaks, wandered through ancient ruins, or discovered hidden gems in
+        bustling cities. Your travel experiences and connections await, Welcome back!
       </v-card-text>
       <LoginForm @show-snackbar="showSnackbar" />
     </v-card>
@@ -33,6 +32,7 @@
 import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import travelers from '@/assets/login-image.png'
+import type { Notification } from '@/models/global'
 import LoginForm from '@/components/login/LoginForm.vue'
 import AlertComponent from '@/components/AlertComponent.vue'
 

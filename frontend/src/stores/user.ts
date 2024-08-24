@@ -1,18 +1,16 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import type {
-  User,
-  TokenData,
-  SignupFormData,
-  LoginFormData
-} from '@/models/user'
+import type { User, TokenData, SignupFormData, LoginFormData } from '@/models/user'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User>({
     isAuthenticated: false,
+    friends: [],
+    friends_count: 0,
     id: null,
     name: null,
+    bio: null,
     email: null,
     access: null,
     refresh: null
@@ -39,23 +37,27 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const removeToken = (): void => {
-    user.value.refresh = null
-    user.value.access = null
+    user.value.refresh = ''
+    user.value.access = ''
     user.value.isAuthenticated = false
-    user.value.id = null
-    user.value.name = null
-    user.value.email = null
+    user.value.id = ''
+    user.value.name = ''
+    user.value.email = ''
 
-    localStorage.setItem('user.access', '')
-    localStorage.setItem('user.refresh', '')
-    localStorage.setItem('user.id', '')
-    localStorage.setItem('user.name', '')
-    localStorage.setItem('user.email', '')
+    localStorage.removeItem('user.access')
+    localStorage.removeItem('user.refresh')
+    localStorage.removeItem('user.id')
+    localStorage.removeItem('user.name')
+    localStorage.removeItem('user.email')
   }
 
   const setUserInfo = (userData: User): void => {
     user.value.id = userData.id
+    user.value.avatar = userData.avatar
+    user.value.friends = userData.friends
+    user.value.friends_count = userData.friends_count
     user.value.name = userData.name
+    user.value.bio = userData.bio
     user.value.email = userData.email
 
     if (user.value.id && user.value.name && user.value.email) {
@@ -68,8 +70,7 @@ export const useUserStore = defineStore('user', () => {
   const getBaseUser = (): Promise<User> => {
     return new Promise((resolve, reject) => {
       if (user.value.access) {
-        axios.defaults.headers.common['Authorization'] =
-          `Bearer ${user.value.access}`
+        axios.defaults.headers.common['Authorization'] = `Bearer ${user.value.access}`
       }
 
       axios
@@ -89,8 +90,7 @@ export const useUserStore = defineStore('user', () => {
       })
       user.value.access = response.data.access
       localStorage.setItem('user.access', response.data.access)
-      axios.defaults.headers.common['Authorization'] =
-        `Bearer ${response.data.access}`
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`
     } catch {
       removeToken()
     }
@@ -98,6 +98,13 @@ export const useUserStore = defineStore('user', () => {
 
   const logout = (): void => {
     removeToken()
+    user.value.id = null
+    user.value.name = null
+    user.value.email = null
+    user.value.avatar = null
+    user.value.access = null
+    user.value.refresh = null
+    user.value.isAuthenticated = false
     window.location.href = '/'
   }
 
@@ -115,8 +122,8 @@ export const useUserStore = defineStore('user', () => {
       axios
         .post('/api/login/', loginFormData)
         .then(response => {
-          const TokenDataResponse = setToken(response.data)
-          resolve(TokenDataResponse)
+          setToken(response.data)
+          resolve(response.data)
         })
         .catch(error => reject(error))
     })

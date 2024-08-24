@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2" elevation="0">
+  <v-card class="mb-2">
     <v-img height="130" :src="gradient" cover>
       <ProfileEdit
         v-model="isDialogVisible"
@@ -18,11 +18,17 @@
         />
       </v-col>
     </v-row>
-    <div class="list pb-2">
+    <div class="list pb-3">
       <v-list>
-        <v-list-item-title class="d-flex justify-center font-weight-bold">
+        <v-list-item-title class="d-flex justify-center font-weight-bold pb-4">
           {{ user?.name }}
         </v-list-item-title>
+        <v-list-item
+          v-if="user?.bio"
+          class="text-grey-darken-2 text-body-2 pa-4 d-flex justify-center"
+        >
+          {{ user.bio }}
+        </v-list-item>
       </v-list>
       <v-list class="d-flex justify-center">
         <v-list-item>
@@ -39,9 +45,17 @@
         </v-list-item>
       </v-list>
     </div>
-    <v-card-actions class="d-flex justify-center mx-4 mb-4" v-if="isRequestButtonVisible">
+    <v-card-actions class="d-flex justify-center mx-4 mb-4" v-if="user.id !== userUUID()">
       <v-spacer></v-spacer>
       <v-btn
+        v-if="user.id !== userUUID()"
+        variant="flat"
+        text="Direct Message"
+        color="pink-accent-3"
+        @click="sendFriendMessage"
+      />
+      <v-btn
+        v-if="isRequestButtonVisible"
         variant="flat"
         text="Send request"
         color="pink-accent-3"
@@ -58,6 +72,7 @@ import type { UserProfile } from '@/models/profile'
 import type { Notification } from '@/models/global'
 import type { Post } from '@/models/post'
 import { useFriendsStore } from '@/stores/friends'
+import { useChatStore } from '@/stores/chat'
 import gradient from '@/assets/gradient.jpeg'
 import avatar from '@/assets/avatar.png'
 import { useRoute } from 'vue-router'
@@ -70,6 +85,7 @@ const props = defineProps<{
 
 const route = useRoute()
 const store = useFriendsStore()
+const chatStore = useChatStore()
 const isDialogVisible = ref(false)
 
 const emit = defineEmits<{
@@ -107,6 +123,10 @@ const sendFriendRequest = async () => {
       })
     })
 }
+
+const sendFriendMessage = async () => {
+  await chatStore.sendDirectMessage(route.params.id as string)
+}
 </script>
 
 <style scoped>
@@ -117,6 +137,6 @@ const sendFriendRequest = async () => {
 }
 
 .list {
-  padding-top: 120px;
+  padding-top: 100px;
 }
 </style>
