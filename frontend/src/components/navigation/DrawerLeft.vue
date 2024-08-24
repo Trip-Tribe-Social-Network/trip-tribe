@@ -75,7 +75,7 @@
             color="pink-accent-3"
             variant="text"
             size="small"
-            to="/chat"
+            @click="navigateToConversation(conversation.id)"
             icon="mdi-message"
           />
         </div>
@@ -86,6 +86,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import avatar from '@/assets/avatar.png'
 import type { User } from '@/models/user'
 import { userUUID } from '@/utils/global'
@@ -96,10 +97,17 @@ defineProps<{
   user: User
 }>()
 
+const router = useRouter()
 const store = useChatStore()
 const userStore = useUserStore()
 
 onMounted(() => store.getConversations())
+
+const navigateToConversation = (conversationId: string) => {
+  store.activeConversationId = conversationId
+  router.push(`/conversation/${conversationId}`)
+  store.getMessages(conversationId)
+}
 
 const userAvatar = (conversation: any) => {
   return (
