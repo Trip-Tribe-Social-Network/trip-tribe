@@ -5,7 +5,7 @@ import Chat from '@/views/ChatView.vue'
 import Feed from '@/views/FeedView.vue'
 import Friends from '@/views/FriendsView.vue'
 import Profile from '@/views/ProfileView.vue'
-import Messages from '@/views/MessagesView.vue'
+import Conversations from '@/views/ConversationsView.vue'
 
 const routes = [
   {
@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chat',
-    component: Messages
+    component: Conversations
   },
   {
     path: '/conversation/:id',
