@@ -57,11 +57,13 @@ describe('ProfileEdit', () => {
     await fireEvent.update(getByLabelText('Name'), 'John Doe')
     await fireEvent.update(getByLabelText('Email'), 'john.doe@gmail.com')
     await fireEvent.update(getByLabelText('Avatar'), 'john.png')
+    await fireEvent.update(getByLabelText('Bio'), 'my bio')
     await fireEvent.click(getByTestId('save-changes'))
 
     const expectedFormData = new FormData()
     expectedFormData.append('name', 'John Doe')
     expectedFormData.append('email', 'john.doe@gmail.com')
+    expectedFormData.append('bio', 'my bio')
     expectedFormData.append('avatar', 'john.png')
 
     await waitFor(() => {
