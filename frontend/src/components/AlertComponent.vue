@@ -2,21 +2,36 @@
   <v-alert
     :width="400"
     class="alert ma-3 text-center"
-    v-if="alert && alert.type"
+    v-if="isVisible"
     :color="alert.type === 'error' ? 'red' : 'green'"
     :type="alert.type"
-    :message="alert.message"
   >
-    <p>{{ alert.message }}</p>
+    {{ alert.message }}
   </v-alert>
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import type { Notification } from '@/models/global'
 
-defineProps<{
+const props = defineProps<{
   alert: Notification
 }>()
+
+const isVisible = ref(false)
+
+watch(
+  () => props.alert,
+  newAlert => {
+    if (newAlert && newAlert.message) {
+      isVisible.value = true
+      setTimeout(() => {
+        isVisible.value = false
+      }, 2000)
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <style scoped>
