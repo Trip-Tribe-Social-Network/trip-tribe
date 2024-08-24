@@ -6,8 +6,8 @@ from account.models import User
 from account.serializers import UserSerializer
 
 from .forms import PostForm
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Trend
+from .serializers import PostSerializer, TrendSerializer
 
 
 @api_view(['GET'])
@@ -18,6 +18,12 @@ def post_list(request):
         user_ids.append(user.id)
 
     posts = Post.objects.filter(created_by_id__in=list(user_ids))
+
+    trend = request.GET.get('trend', '')
+
+    if trend:
+        posts = posts.filter(body__contains='#' + trend)
+
     serializer = PostSerializer(posts, many=True)
 
     return JsonResponse(serializer.data, safe=False)
@@ -64,3 +70,9 @@ def post_report(request, pk):
     post.save()
 
     return JsonResponse({'message': 'post reported'})
+
+@api_view(['GET'])
+def get_trends(request):
+    serializer = TrendSerializer(Trend.objects.all(), many=True)
+
+    return JsonResponse(serializer.data, safe=False)
