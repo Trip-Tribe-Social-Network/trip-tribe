@@ -29,7 +29,7 @@ const routes = [
     component: Messages
   },
   {
-    path: '/conversation',
+    path: '/conversation/:id',
     name: 'conversation',
     component: Chat
   },
