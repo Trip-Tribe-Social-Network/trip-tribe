@@ -1,10 +1,16 @@
+import type { User } from '@/models/friends'
+
 export interface User {
-  isAuthenticated: boolean
+  isAuthenticated?: boolean
   id: string | null
   name: string | null
   email: string | null
-  access: string | null
-  refresh: string | null
+  bio?: string | null
+  access?: string | null
+  refresh?: string | null
+  friends: User[]
+  friends_count: number
+  avatar?: string | null | undefined
 }
 
 export interface SignupFormData {
@@ -20,6 +26,7 @@ export interface LoginFormData {
 }
 
 export type TokenData = {
+  id: string
   access: string
   refresh: string
 }
