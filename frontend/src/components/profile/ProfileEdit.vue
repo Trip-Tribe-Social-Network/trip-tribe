@@ -26,19 +26,19 @@
         <v-form ref="form" class="list ma-5">
           <v-text-field label="Name" v-model="user.name" />
           <v-text-field label="Email" v-model="user.email" />
+          <v-text-field
+            label="Bio"
+            placeholder="bio"
+            v-model="user.bio"
+            :rules="counterRules"
+            counter="45"
+          ></v-text-field>
           <v-file-input
             accept="image/png, image/jpeg, image/jpg, image/bmp"
             prepend-icon="mdi-image"
             label="Avatar"
             @change="handleFileChange"
           />
-          <v-textarea
-            placeholder="bio"
-            rows="2"
-            v-model="user.bio"
-            :rules="counterRules"
-            counter="100"
-          ></v-textarea>
           <v-card-actions class="d-flex justify-center ma-4">
             <v-spacer></v-spacer>
             <v-btn
