@@ -32,7 +32,9 @@ def edit_profile(request):
         if form.is_valid():
             form.save()
 
-        return JsonResponse({'message': 'information updated'})
+        serializer = UserSerializer(user)
+
+        return JsonResponse({'message': 'information updated', 'user': serializer.data})
 
 @api_view(['POST'])
 @authentication_classes([])
@@ -52,9 +54,9 @@ def signup(request):
         form.save()
         # Need to set up verification email in the future
     else:
-        message = 'error'
+        message = form.errors.as_json()
 
-    return JsonResponse({'status': message})
+    return JsonResponse({'message': message}, safe=False)
 
 @api_view(['GET'])
 def friends(request, pk):
