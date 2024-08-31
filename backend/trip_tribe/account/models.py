@@ -56,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.avatar:
             return 'http://127.0.0.1:8000' + self.avatar.url
         else:
-            return ''
+            return 'https://img.icons8.com/?size=200&id=98957&format=png&color=000000'
 
 class FriendshipRequest(models.Model):
     SENT = 'sent'

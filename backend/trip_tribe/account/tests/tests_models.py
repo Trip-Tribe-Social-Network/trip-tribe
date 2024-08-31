@@ -60,7 +60,7 @@ class UserModelTest(TestCase):
         self.assertTrue(self.user.avatar.size > 0)
 
     def test_get_avatar(self):
-        self.assertEqual(self.user.get_avatar(), '')
+        self.assertEqual(self.user.get_avatar(), 'https://img.icons8.com/?size=200&id=98957&format=png&color=000000')
 
         base64_image_data = (
             "iVBORw0KGgoAAAANSUhEUgAAAAUA"

@@ -1,9 +1,11 @@
+from django.core import mail
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth import get_user_model 
 from rest_framework import status
 from account.models import User, FriendshipRequest
 import json
+import uuid
 
 class AccountTests(APITestCase):
     def test_signup_success(self):
@@ -16,7 +18,7 @@ class AccountTests(APITestCase):
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['status'], 'success')
+        self.assertEqual(response.json()['message'], 'success')
         self.assertTrue(User.objects.filter(email='testuser@example.com').exists())
 
     def test_signup_password_mismatch(self):
@@ -29,7 +31,13 @@ class AccountTests(APITestCase):
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['status'], 'error')
+
+        message = response.json()['message']
+        parsed_message = json.loads(message)
+
+        self.assertIn('password2', parsed_message)
+        self.assertEqual(parsed_message['password2'][0]['code'], "password_mismatch")
+                
         self.assertFalse(User.objects.filter(email='testuser@example.com').exists())
 
     def test_me_authenticated(self):
@@ -75,8 +83,88 @@ class AccountTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response_data['message'], 'information updated')
-        self.assertEqual(user.name, 'newname')
-        self.assertEqual(user.email, 'newemail@example.com')
+        self.assertEqual(response_data['user']['name'], 'newname')
+        self.assertEqual(response_data['user']['email'], 'newemail@example.com')
+
+    def test_edit_password_success(self):
+        self.user = User.objects.create_user(email='testuser@example.com', name='Test User', password='oldpassword123')
+        self.client.force_authenticate(user=self.user)
+        url = reverse('edit_password')
+        
+        data = {
+            'old_password': 'oldpassword123',
+            'new_password1': 'newstrongpassword123',
+            'new_password2': 'newstrongpassword123',
+        }
+        
+        response = self.client.post(url, data, format='multipart') 
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['message'], 'password updated')
+ 
+        self.assertTrue(self.user.check_password('newstrongpassword123'))  
+
+    def test_edit_password_invalid_old_password(self):
+        self.user = User.objects.create_user(email='testuser@example.com', name='Test User', password='oldpassword123')
+        self.client.force_authenticate(user=self.user)
+
+        url = reverse('edit_password')
+        
+        data = {
+            'old_password': 'wrongpassword123',
+            'new_password1': 'newstrongpassword123',
+            'new_password2': 'newstrongpassword123',
+        }
+        
+        response = self.client.post(url, data, format='multipart')  # Use 'multipart' for form data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        message = response.json()['message']
+        parsed_message = json.loads(message)
+        self.assertIn('old_password', parsed_message)
+        self.assertEqual(parsed_message['old_password'][0]['code'], 'password_incorrect')
+        
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('oldpassword123'))
+
+    def test_signup_sends_activation_email(self):
+        url = reverse('signup')
+        data = {
+            'email': 'testuser@example.com',
+            'name': 'Test User',
+            'password1': 'strongpassword123',
+            'password2': 'strongpassword123'
+        }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['message'], 'success')
+
+        user = User.objects.get(email='testuser@example.com')
+        self.assertFalse(user.is_active)
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(user.email, mail.outbox[0].to)
+        self.assertIn('Please verify your email address', mail.outbox[0].subject)
+
+        activation_url = f'http://127.0.0.1:8000/activateemail/?email={user.email}&id={user.id}'
+        self.assertIn(activation_url, mail.outbox[0].body)
+        
+    def test_activate_email_success(self):
+        user = User.objects.create_user(email='testuser@example.com', name='Test User', password='strongpassword123')
+        user.is_active = False
+        user.save()
+        url = reverse('activate_email') + f'?email={user.email}&id={user.id}'
+        
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.content.decode(), 'Email activated, you can now login')
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+
 
 class FriendshipTests(APITestCase):
 
