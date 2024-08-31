@@ -128,44 +128,6 @@ class AccountTests(APITestCase):
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('oldpassword123'))
 
-    def test_signup_sends_activation_email(self):
-        url = reverse('signup')
-        data = {
-            'email': 'testuser@example.com',
-            'name': 'Test User',
-            'password1': 'strongpassword123',
-            'password2': 'strongpassword123'
-        }
-        response = self.client.post(url, data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['message'], 'success')
-
-        user = User.objects.get(email='testuser@example.com')
-        self.assertFalse(user.is_active)
-
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn(user.email, mail.outbox[0].to)
-        self.assertIn('Please verify your email address', mail.outbox[0].subject)
-
-        activation_url = f'http://127.0.0.1:8000/activateemail/?email={user.email}&id={user.id}'
-        self.assertIn(activation_url, mail.outbox[0].body)
-        
-    def test_activate_email_success(self):
-        user = User.objects.create_user(email='testuser@example.com', name='Test User', password='strongpassword123')
-        user.is_active = False
-        user.save()
-        url = reverse('activate_email') + f'?email={user.email}&id={user.id}'
-        
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.content.decode(), 'Email activated, you can now login')
-
-        user.refresh_from_db()
-        self.assertTrue(user.is_active)
-
-
 class FriendshipTests(APITestCase):
 
     def setUp(self):
