@@ -5,8 +5,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from account.models import User
 from account.serializers import UserSerializer
 
+
 from .forms import PostForm, AttachmentForm
-from .models import Post, Trend
+from .models import Post, Trend, Like
 from .serializers import PostSerializer, TrendSerializer
 
 
@@ -90,3 +91,18 @@ def get_trends(request):
     serializer = TrendSerializer(Trend.objects.all(), many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
+@api_view(['POST'])
+def post_like(request, pk):
+    post = Post.objects.get(pk=pk)
+    if not post.likes.filter(created_by=request.user):
+        like = Like.objects.create(created_by=request.user)
+
+        post = Post.objects.get(pk=pk)
+        post.likes_count = post.likes_count + 1
+        post.likes.add(like)
+        post.save() 
+
+        return JsonResponse({'message': 'like created'})
+    else:
+        return JsonResponse({'message': 'post already liked'})

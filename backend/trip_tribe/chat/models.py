@@ -13,7 +13,7 @@ class Conversation(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     
     def modified_at_formatted(self):
-       return timesince(self.created_at)
+       return self.created_at.isoformat()
 
 
 class ConversationMessage(models.Model):
@@ -25,5 +25,5 @@ class ConversationMessage(models.Model):
     created_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     
     def created_at_formatted(self):
-       return timesince(self.created_at)
+       return self.created_at.isoformat()
     

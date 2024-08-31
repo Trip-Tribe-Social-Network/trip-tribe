@@ -14,11 +14,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'body', 'created_by', 'created_at_formatted', 'attachments',)
-
-# Neew to add below code in the PostDetailSerializer
-#     attachments = PostAttachmentSerializer(read_only=True, many=True)
-#     add 'attachements' in the fields
+        fields = ('id', 'body', 'likes_count', 'created_by', 'created_at_formatted', 'attachments',)
 
 
 class TrendSerializer(serializers.ModelSerializer):

@@ -5,6 +5,10 @@ from django.utils.timesince import timesince
 
 from account.models import User
 
+class Like(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_by = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class PostAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,8 +28,8 @@ class Post(models.Model):
 
     attachments = models.ManyToManyField(PostAttachment, blank=True)
 
-    #likes
-    #likes_count
+    likes = models.ManyToManyField(Like, blank=True)
+    likes_count = models.IntegerField(default=0) 
 
     reported_by_users = models.ManyToManyField(User, blank=True)
 
@@ -36,7 +40,7 @@ class Post(models.Model):
         ordering = ['-created_at']
 
     def created_at_formatted(self):
-        return timesince(self.created_at)
+       return self.created_at.isoformat()
     
 
 class Trend(models.Model):
