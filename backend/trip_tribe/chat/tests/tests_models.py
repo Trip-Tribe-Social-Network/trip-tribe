@@ -26,8 +26,7 @@ class ConversationModelTests(TestCase):
         formatted_time = self.conversation.modified_at_formatted()
         
         self.assertIsInstance(formatted_time, str)        
-        self.assertIn("minute", formatted_time)
-        self.assertTrue(formatted_time[0].isdigit())
+        self.assertRegex(formatted_time, r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+(Z|(\+00:00))")
 
 class ConversationMessageModelTests(TestCase):
     def setUp(self):
@@ -57,5 +56,4 @@ class ConversationMessageModelTests(TestCase):
     def test_message_created_at_formatted(self):
         formatted_time = self.message.created_at_formatted()
         self.assertIsInstance(formatted_time, str)
-        self.assertIn("minute", formatted_time)
-        self.assertTrue(formatted_time[0].isdigit())
+        self.assertRegex(formatted_time, r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+(Z|(\+00:00))")
