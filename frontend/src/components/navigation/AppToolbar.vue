@@ -6,11 +6,7 @@
     <template v-slot:append>
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-avatar
-            :image="user.avatar || avatar"
-            v-bind="props"
-            class="rounded-0"
-          ></v-avatar>
+          <v-avatar :image="user.avatar" v-bind="props" class="rounded-0"></v-avatar>
         </template>
         <v-list>
           <v-list-item>
@@ -49,7 +45,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import logo from '@/assets/logo.png'
-import avatar from '@/assets/avatar.png'
 import type { User } from '@/models/user'
 import { useUserStore } from '@/stores/user'
 

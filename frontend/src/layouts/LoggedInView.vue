@@ -1,34 +1,9 @@
 <template>
   <v-layout>
     <AppToolbar />
-    <DrawerLeft v-if="userIsAuthenticated" v-model="leftDrawer" :user="store.user" />
+    <DrawerLeft v-if="userIsAuthenticated" v-model="leftDrawer" />
     <DrawerRight v-model="rightDrawer" />
-    <v-bottom-navigation v-if="bottomDrawer" class="bottom-drawer">
-      <v-btn
-        to="/feed"
-        class="text-caption"
-        prepend-icon="mdi-view-grid"
-        color="pink-accent-3"
-      />
-      <v-btn
-        to="/chat"
-        class="text-caption"
-        prepend-icon="mdi-comment-multiple"
-        color="pink-accent-3"
-      />
-      <v-btn
-        :to="`/profile/${store.user.id}/friends`"
-        class="text-caption"
-        prepend-icon="mdi-account-group"
-        color="pink-accent-3"
-      />
-      <v-btn
-        :to="`/profile/${store.user.id}`"
-        class="text-caption"
-        prepend-icon="mdi-account"
-        color="pink-accent-3"
-      />
-    </v-bottom-navigation>
+    <BottomNavigation v-if="bottomDrawer" />
     <v-main>
       <SearchComponent class="mx-4 mt-4" />
       <router-view />
@@ -41,7 +16,8 @@ import { onMounted } from 'vue'
 import { computed, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import AppToolbar from '@/components/AppToolbar.vue'
+import AppToolbar from '@/components/navigation/AppToolbar.vue'
+import BottomNavigation from '@/components/navigation/BottomNavigation.vue'
 import SearchComponent from '@/components/SearchComponent.vue'
 import DrawerLeft from '@/components/navigation/DrawerLeft.vue'
 import DrawerRight from '@/components/navigation/DrawerRight.vue'
@@ -49,9 +25,7 @@ import DrawerRight from '@/components/navigation/DrawerRight.vue'
 const store = useUserStore()
 const userIsAuthenticated = computed(() => store.user.isAuthenticated)
 
-onMounted(() => {
-  store.getBaseUser()
-})
+store.getBaseUser()
 
 const rightDrawer = ref(true)
 const leftDrawer = ref(true)
