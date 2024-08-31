@@ -12,22 +12,22 @@
       density="compact"
     >
       <v-list-item class="d-flex justify-center text-caption pb-4">
-        {{ message.created_at_formatted }} ago
+        {{ moment(message.created_at_formatted).format('lll') }}
       </v-list-item>
       <div
         class="d-flex justify-space-between pa-0"
         :class="[
-          message.created_by.id === userUUID() ? 'justify-start' : 'justify-end',
-          message.created_by.id === userUUID() ? 'flex-row' : 'flex-row-reverse'
+          message.created_by.id === userUUID() ? 'justify-end' : 'justify-start',
+          message.created_by.id === userUUID() ? 'flex-row-reverse' : 'flex-row'
         ]"
       >
         <div
           class="d-flex"
-          :class="message.created_by.id === userUUID() ? 'flex-row' : 'flex-row-reverse'"
+          :class="message.created_by.id === userUUID() ? 'flex-row-reverse' : 'flex-row'"
         >
           <v-avatar
             v-if="!smAndDown"
-            :image="message.created_by.get_avatar || avatar"
+            :image="message.created_by.get_avatar"
             class="mx-2"
             size="40"
           ></v-avatar>
@@ -71,8 +71,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import moment from 'moment'
 import { useDisplay } from 'vuetify'
-import avatar from '@/assets/avatar.png'
 import { userUUID } from '@/utils/global'
 import { useChatStore } from '@/stores/chat'
 import type { Message } from '@/models/chat'
