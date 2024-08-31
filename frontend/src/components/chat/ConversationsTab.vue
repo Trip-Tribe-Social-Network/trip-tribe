@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import avatar from '@/assets/avatar.png'
 import { userUUID } from '@/utils/global'
 import { useChatStore } from '@/stores/chat'
 import type { Conversations } from '@/models/chat'
@@ -32,10 +31,7 @@ const store = useChatStore()
 const conversations = computed<Conversations>(() => store.conversations)
 
 const userAvatar = (conversation: any) => {
-  return (
-    conversation.users.filter((user: any) => user.id !== userUUID())[0].get_avatar ||
-    avatar
-  )
+  return conversation.users.filter((user: any) => user.id !== userUUID())[0].get_avatar
 }
 
 const userName = (conversation: any) => {

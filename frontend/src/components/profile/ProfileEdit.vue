@@ -16,11 +16,7 @@
         <v-img height="150" :src="gradient" cover></v-img>
         <v-row justify="center">
           <v-col class="d-flex justify-center align-center" cols="12">
-            <v-avatar
-              :image="avatarUrl ?? (user.get_avatar ? user.get_avatar : avatarImg)"
-              size="180"
-              class="profile"
-            />
+            <v-avatar :image="avatarUrl ?? user.get_avatar" size="180" class="profile" />
           </v-col>
         </v-row>
         <v-form ref="form" class="list ma-5">
@@ -69,11 +65,12 @@ import { counterRules } from '@/utils/validationRules'
 import type { Notification } from '@/models/global'
 import type { UserProfile } from '@/models/profile'
 import { useProfileStore } from '@/stores/profile'
+import { useUserStore } from '@/stores/user'
 import type { VForm } from 'vuetify/components'
 import gradient from '@/assets/gradient.jpeg'
-import avatarImg from '@/assets/avatar.png'
 
 const store = useProfileStore()
+const userStore = useUserStore()
 const user = computed((): UserProfile | undefined => store.user)
 const form = ref<VForm | null>(null)
 const avatar = ref<File | null>(null)
@@ -112,6 +109,7 @@ const editProfile = async () => {
       store
         .editUserProfile(formData)
         .then(() => {
+          userStore.getBaseUser()
           emit('show-snackbar', {
             type: 'success',
             message: 'Profile successfully updated'

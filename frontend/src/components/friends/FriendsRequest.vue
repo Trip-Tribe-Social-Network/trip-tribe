@@ -8,7 +8,7 @@
     <v-avatar
       data-testid="avatar"
       class="mr-3"
-      :image="request.created_by.get_avatar || avatar"
+      :image="request.created_by.get_avatar"
       size="50"
     />
     <v-list-item :to="`/profile/${request.created_by.id}`">
@@ -33,12 +33,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import avatar from '@/assets/avatar.png'
 import type { Request } from '@/models/friends'
 import { useFriendsStore } from '@/stores/friends'
+import { useUserStore } from '@/stores/user'
 import type { Notification } from '@/models/global'
 
 const store = useFriendsStore()
+const userStore = useUserStore()
 const requests = computed<Request[]>(() => store.requests)
 
 const filteredRequests = computed(() =>
@@ -53,6 +54,7 @@ const handleFriendshipRequest = async (status: 'accept' | 'reject', userId: stri
   await store
     .handleFriendRequest(status, userId)
     .then(() => {
+      userStore.getBaseUser()
       emit('show-snackbar', {
         message: `Friend request updated successfully`,
         type: 'success'

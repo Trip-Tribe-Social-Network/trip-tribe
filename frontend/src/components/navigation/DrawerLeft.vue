@@ -5,7 +5,7 @@
       class="d-flex flex-column justify-center aligner-center text-center pa-2 mb-4"
     >
       <div class="d-flex flex-column justify-center align-center my-4">
-        <v-avatar :image="user.avatar || avatar" size="100" class="mb-2" />
+        <v-avatar :image="user.avatar" size="100" class="mb-2" />
       </div>
       <h4>{{ user.name }}</h4>
     </v-card>
@@ -76,7 +76,7 @@
             variant="text"
             size="small"
             @click="navigateToConversation(conversation.id)"
-            icon="mdi-message"
+            icon="mdi-comment-multiple"
           />
         </div>
       </v-list>
@@ -85,21 +85,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import avatar from '@/assets/avatar.png'
 import type { User } from '@/models/user'
 import { userUUID } from '@/utils/global'
 import { useUserStore } from '@/stores/user'
 import { useChatStore } from '@/stores/chat'
 
-defineProps<{
-  user: User
-}>()
-
 const router = useRouter()
 const store = useChatStore()
 const userStore = useUserStore()
+
+const user = computed((): User => userStore.user)
+const avatarUrl = computed(() => user.value.avatar)
 
 onMounted(() => store.getConversations())
 
@@ -110,10 +108,7 @@ const navigateToConversation = (conversationId: string) => {
 }
 
 const userAvatar = (conversation: any) => {
-  return (
-    conversation.users.filter((user: any) => user.id !== userUUID())[0].get_avatar ||
-    avatar
-  )
+  return conversation.users.filter((user: any) => user.id !== userUUID())[0].get_avatar
 }
 
 const userName = (conversation: any) => {

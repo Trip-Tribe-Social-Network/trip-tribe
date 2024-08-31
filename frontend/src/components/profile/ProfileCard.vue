@@ -10,7 +10,7 @@
     <v-row justify="center">
       <v-col class="d-flex justify-center align-center" cols="12">
         <v-avatar
-          :image="user?.get_avatar || avatar"
+          :image="user?.get_avatar"
           data-testid="avatar"
           alt="Avatar"
           size="180"
@@ -74,7 +74,6 @@ import type { Post } from '@/models/post'
 import { useFriendsStore } from '@/stores/friends'
 import { useChatStore } from '@/stores/chat'
 import gradient from '@/assets/gradient.jpeg'
-import avatar from '@/assets/avatar.png'
 import { useRoute } from 'vue-router'
 import { userUUID } from '@/utils/global'
 

@@ -21,7 +21,7 @@
         :title="item.raw.name"
         :to="`/profile/${item.raw.id}`"
         :subtitle="item.raw.email"
-        :prepend-avatar="item.raw.get_avatar || avatar"
+        :prepend-avatar="item.raw.get_avatar"
       ></v-list-item>
     </template>
   </v-autocomplete>
@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import avatar from '@/assets/avatar.png'
 import { useSearchStore } from '@/stores/search'
 import type { UserProfile } from '@/models/profile'
 
