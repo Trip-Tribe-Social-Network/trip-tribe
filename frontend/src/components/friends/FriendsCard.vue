@@ -1,6 +1,6 @@
 <template>
   <v-list :key="friend.id" v-for="friend in friends" class="d-flex align-center">
-    <v-avatar data-testid="avatar" :image="friend.get_avatar || avatar" />
+    <v-avatar data-testid="avatar" :image="friend.get_avatar" />
     <v-list-item>{{ friend.name }}</v-list-item>
     <v-spacer></v-spacer>
     <v-btn
@@ -14,7 +14,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import avatar from '@/assets/avatar.png'
 import type { User } from '@/models/friends'
 import { useFriendsStore } from '@/stores/friends'
 
