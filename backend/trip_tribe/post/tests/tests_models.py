@@ -35,6 +35,10 @@ class PostAttachmentModelTest(TestCase):
         self.assertEqual(self.attachment.created_by, self.user)
         self.assertTrue(isinstance(self.attachment.id, uuid.UUID))
 
+    def test_get_image(self):
+        expected_url = 'http://127.0.0.1:8000' + self.attachment.image.url
+        self.assertEqual(self.attachment.get_image(), expected_url)
+
 class TrendModelTest(TestCase):
     def setUp(self):
         self.trend = Trend.objects.create(hashtag='newtrend', occurences=10)

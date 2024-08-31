@@ -2,9 +2,10 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from post.models import Post, Trend
-from django.core.exceptions import ObjectDoesNotExist
-import uuid
+from post.models import Post, Trend, PostAttachment
+from django.core.files.uploadedfile import SimpleUploadedFile
+import base64
+
 
 User = get_user_model()
 
@@ -58,13 +59,42 @@ class PostAPITest(APITestCase):
         self.assertTrue(any(post['body'] == 'Test Post #newtrend' for post in posts_data))
         self.assertFalse(any(post['body'] == 'Friend Post #newtrend' for post in posts_data))
 
-    def test_post_create(self):
+    def test_post_create_without_attachment(self):
         url = reverse('post_create')
         data = {'body': 'New Post'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['body'], 'New Post')
         self.assertEqual(response.json()['created_by']['name'], 'testuser')
+
+    def test_post_create_with_attachment(self):
+        url = reverse('post_create')
+        # Prepare an image file as attachment
+        base64_image_data = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAUA"
+            "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO"
+            "9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        )
+        image_data = base64.b64decode(base64_image_data)
+        image = SimpleUploadedFile("test_image.png", image_data, content_type="image/png")
+        
+        data = {
+            'body': 'This is a post with an attachment',
+            'image': image
+        }
+
+        response = self.client.post(url, data, format='multipart')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Post.objects.count(), 3)
+        self.assertEqual(PostAttachment.objects.count(), 1)
+        
+        post = Post.objects.first()
+        attachment = PostAttachment.objects.first()
+        
+        self.assertEqual(post.body, 'This is a post with an attachment')
+        self.assertEqual(post.attachments.count(), 1)
+        self.assertEqual(post.attachments.first(), attachment)
 
     def test_post_delete(self):
         self.assertTrue(Post.objects.filter(id=self.post.id).exists(), "The post should exist before deletion.")
