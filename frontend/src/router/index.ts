@@ -6,6 +6,7 @@ import Feed from '@/views/FeedView.vue'
 import Friends from '@/views/FriendsView.vue'
 import Profile from '@/views/ProfileView.vue'
 import Conversations from '@/views/ConversationsView.vue'
+import Trends from '@/views/TrendsView.vue'
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     path: '/profile/:id',
     name: 'profile',
     component: Profile
+  },
+  {
+    path: '/trends/:id',
+    name: 'trends',
+    component: Trends
   }
 ]
 

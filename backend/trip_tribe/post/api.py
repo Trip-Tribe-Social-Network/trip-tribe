@@ -13,21 +13,20 @@ from .serializers import PostSerializer, TrendSerializer
 
 @api_view(['GET'])
 def post_list(request):
-    user_ids = [request.user.id]
-
-    for user in request.user.friends.all():
-        user_ids.append(user.id)
-
-    posts = Post.objects.filter(created_by_id__in=list(user_ids))
-
     trend = request.GET.get('trend', '')
 
     if trend:
-        posts = posts.filter(body__contains='#' + trend)
+        posts = Post.objects.filter(body__icontains='#' + trend)
+    else:
+        user_ids = [request.user.id]
+        for user in request.user.friends.all():
+            user_ids.append(user.id)
+        posts = Post.objects.filter(created_by_id__in=user_ids)
 
     serializer = PostSerializer(posts, many=True)
 
     return JsonResponse(serializer.data, safe=False)
+
 
 @api_view(['GET'])
 def post_list_profile(request, id):
