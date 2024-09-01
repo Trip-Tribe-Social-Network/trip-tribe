@@ -2,32 +2,36 @@
   <v-card>
     <template v-slot:prepend>
       <div class="d-flex justify-space-between align-center pa-2">
-        <v-avatar :image="post.created_by.get_avatar || avatar" size="50" class="mr-4" />
-        <p class="text-body-2 font-weight-bold">{{ post.created_by.name }}</p>
+        <v-avatar :image="post.created_by.get_avatar" size="50" class="mr-4" />
+        <a
+          class="text-body-2 text-black font-weight-bold text-decoration-none"
+          :href="`/profile/${post.created_by.id}`"
+        >
+          {{ post.created_by.name }}
+        </a>
       </div>
     </template>
     <template v-slot:append>
-      <p class="text-body-2">{{ post.created_at_formatted }} ago</p>
+      <p class="text-body-2">
+        {{ moment(post.created_at_formatted).format('ll') }}
+      </p>
     </template>
     <div class="px-4">
-      <v-img
-        :src="lagoon"
-        class="py-2 px-4"
-        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-        max-height="300px"
-        cover
-      ></v-img>
+      <div v-if="post.attachments.length">
+        <v-img
+          v-for="image in post.attachments"
+          :src="image.get_image"
+          class="py-2 px-4"
+          max-height="350px"
+          cover
+        ></v-img>
+      </div>
       <v-card-text v-if="post.body" class="text-body-2 text-justify px-1">
         {{ post.body }}
       </v-card-text>
     </div>
     <v-card-actions class="px-4 pt-0">
-      <v-icon
-        class="me-2"
-        :icon="liked ? 'mdi-heart' : 'mdi-heart-outline'"
-        :color="liked ? 'red' : 'black'"
-        @click="like"
-      ></v-icon>
+      <v-icon class="me-2" icon="mdi-heart-outline" @click="like"></v-icon>
       <span class="subheading me-4">{{ post.likes_count }}</span>
       <v-icon
         @click="toggleComments"
@@ -35,9 +39,8 @@
         icon="mdi-comment-multiple-outline"
       ></v-icon>
       <span class="subheading me-4">25</span>
-
       <v-spacer></v-spacer>
-      <v-menu>
+      <v-menu v-if="post.created_by.id === userUUID()">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-dots-vertical"
@@ -47,9 +50,11 @@
           ></v-btn>
         </template>
         <v-list>
-          <v-list-item>
-            <v-list-item prepend-icon="mdi-delete">Delete Post</v-list-item>
-            <v-list-item>Report Post</v-list-item>
+          <v-list-item
+            base-color="red"
+            prepend-icon="mdi-delete"
+            @click="handleDeletePost"
+            >Delete
           </v-list-item>
         </v-list>
       </v-menu>
@@ -81,39 +86,32 @@
 </template>
 
 <script setup lang="ts">
-import avatar from '@/assets/avatar.png'
-import lagoon from '@/assets/lagoon.jpeg'
+import { ref } from 'vue'
+import moment from 'moment'
+import { userUUID } from '@/utils/global'
 import type { Post } from '@/models/post'
 import { usePostStore } from '@/stores/post'
-import { ref } from 'vue'
 
 const props = defineProps<{
   post: Post
 }>()
 
-const store = usePostStore()
-const comments = ref(false)
 const liked = ref(false)
+const comments = ref(false)
+const store = usePostStore()
 
 const emit = defineEmits<{
   (event: 'show-snackbar', payload: Notification): void
 }>()
 
 const like = async () => {
-  await store
-    .likePost(props.post.id as string)
-    .then(response => {
-      emit('show-snackbar', {
-        type: 'success',
-        message: response.message
-      })
-    })
-    .catch(error => {
-      emit('show-snackbar', {
-        type: 'error',
-        message: error.message
-      })
-    })
+  await store.likePost(props.post.id as string).then(() => {
+    liked.value = true
+  })
+}
+
+const handleDeletePost = async () => {
+  await store.deletePost(props.post.id as string)
 }
 const toggleComments = () => {
   comments.value = !comments.value
