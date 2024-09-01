@@ -22,10 +22,14 @@ export const usePostStore = defineStore('post', () => {
     })
   }
 
-  const createPost = (body: string): Promise<void> => {
+  const createPost = (formData: FormData): Promise<void> => {
     return new Promise((resolve, reject) => {
       axios
-        .post('/api/posts/create/', body)
+        .post('/api/posts/create/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
         .then(async () => {
           await fetchPosts()
           resolve()
@@ -55,12 +59,14 @@ export const usePostStore = defineStore('post', () => {
   const getTrendPosts = (trendId: string): Promise<Post[]> => {
     return new Promise((resolve, reject) => {
       axios
-        .get(`/api/posts/?trend=${trendId}/`)
+        .get(`/api/posts/?trend=${trendId}`)
         .then(response => {
           posts.value = response.data
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => {
+          reject(error)
+        })
     })
   }
 
@@ -69,7 +75,19 @@ export const usePostStore = defineStore('post', () => {
       axios
         .post(`/api/posts/${postId}/like/`)
         .then(response => {
-          posts.value = response.data
+          fetchPosts()
+          resolve(response.data)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
+  const deletePost = (postId: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .delete(`/api/posts/${postId}/delete/`)
+        .then(response => {
+          fetchPosts()
           resolve(response.data)
         })
         .catch(error => reject(error))
@@ -83,6 +101,7 @@ export const usePostStore = defineStore('post', () => {
     getTrends,
     getTrendPosts,
     trends,
-    likePost
+    likePost,
+    deletePost
   }
 })
