@@ -1,11 +1,9 @@
-from django.core import mail
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth import get_user_model 
 from rest_framework import status
 from account.models import User, FriendshipRequest
 import json
-import uuid
 
 class AccountTests(APITestCase):
     def test_signup_success(self):
