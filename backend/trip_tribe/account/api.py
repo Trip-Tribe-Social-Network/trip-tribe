@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from rest_framework import status
 
+from notification.utils import create_notification
+
 from .forms import SignupForm, ProfileForm
 from .models import User, FriendshipRequest
 from .serializers import UserSerializer, FriendshipRequestSerializer
@@ -106,7 +108,10 @@ def send_friendship_request(request, pk):
     ).exclude(status=FriendshipRequest.REJECTED).exists()
 
     if not existing_request:
-        FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+        friendrequest = FriendshipRequest.objects.create(created_for=user, created_by=request.user)
+
+        notification = create_notification(request, 'new_friendrequest', friendrequest_id=friendrequest.id)
+
         return JsonResponse({'message': 'Friendship request created'})
     else:
         return JsonResponse({'message': 'Request already sent'})
@@ -126,5 +131,7 @@ def handle_request(request, pk, status):
     request_user = request.user
     request_user.friends_count += 1
     request_user.save()
+
+    notification = create_notification(request, 'accepted_friendrequest', friendrequest_id=friendship_request.id)
 
     return JsonResponse({'message': 'friendship request updated'})

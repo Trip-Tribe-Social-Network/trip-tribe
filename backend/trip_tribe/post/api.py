@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from account.models import User
 from account.serializers import UserSerializer
-
+from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm
 from .models import Post, Trend, Like
@@ -102,6 +102,12 @@ def post_like(request, pk):
         post.likes.add(like)
         post.save() 
 
+        notification = create_notification(request, 'post_like', post_id=post.id)
+
         return JsonResponse({'message': 'like created'})
     else:
         return JsonResponse({'message': 'post already liked'})
+    
+
+
+# need to add notification for the post_create_comment function
