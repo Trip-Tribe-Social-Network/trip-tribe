@@ -30,3 +30,11 @@ export type TokenData = {
   access: string
   refresh: string
 }
+
+export type Notification = {
+  id: string
+  body: string
+  type_of_notification: string
+  post_id: string
+  created_for_id: string
+}
