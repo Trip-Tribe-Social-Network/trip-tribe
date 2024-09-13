@@ -14,7 +14,7 @@ export const useSearchStore = defineStore('search', () => {
           users.value = response.data.users
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
