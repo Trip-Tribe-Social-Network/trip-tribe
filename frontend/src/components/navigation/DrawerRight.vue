@@ -36,7 +36,6 @@
 import TrendsCard from '@/components/post/TrendsCard.vue'
 import type { User } from '@/models/user'
 import { useUserStore } from '@/stores/user'
-import { usePostStore } from '@/stores/post'
 import { ref, computed } from 'vue'
 
 const store = useUserStore()
