@@ -19,7 +19,7 @@ export const useChatStore = defineStore('chat', () => {
           conversations.value = response.data
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -32,7 +32,7 @@ export const useChatStore = defineStore('chat', () => {
           messages.value = response.data.messages
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -45,7 +45,7 @@ export const useChatStore = defineStore('chat', () => {
           activeConversationId.value = response.data.id
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -65,7 +65,7 @@ export const useChatStore = defineStore('chat', () => {
           getConversations()
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
