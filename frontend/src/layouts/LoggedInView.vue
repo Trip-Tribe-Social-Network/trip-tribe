@@ -26,6 +26,7 @@ const store = useUserStore()
 const userIsAuthenticated = computed(() => store.user.isAuthenticated)
 
 store.getBaseUser()
+store.getNotifications()
 
 const rightDrawer = ref(true)
 const leftDrawer = ref(true)

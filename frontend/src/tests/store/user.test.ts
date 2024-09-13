@@ -3,7 +3,8 @@ import { useUserStore } from '@/stores/user'
 import {
   SIGNUP_FORM_DATA,
   LOGIN_FORM_DATA,
-  TOKEN_DATA
+  TOKEN_DATA,
+  NOTIFICATIONS
 } from '@/tests/mocks/user'
 import { createPinia, setActivePinia } from 'pinia'
 import axios from 'axios'
@@ -31,5 +32,16 @@ describe('user store', () => {
     const spy = vi.spyOn(axios, 'post')
     await store.login(LOGIN_FORM_DATA)
     expect(spy).toHaveBeenCalledWith('/api/login/', LOGIN_FORM_DATA)
+  })
+  test('user notification success', async () => {
+    const store = useUserStore()
+
+    axios.get = vi.fn().mockResolvedValue({
+      data: NOTIFICATIONS
+    })
+
+    const spy = vi.spyOn(axios, 'get')
+    await store.getNotifications()
+    expect(spy).toHaveBeenCalledWith('/api/notifications/')
   })
 })

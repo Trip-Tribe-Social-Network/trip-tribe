@@ -1,7 +1,13 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import type { User, TokenData, SignupFormData, LoginFormData } from '@/models/user'
+import type {
+  User,
+  TokenData,
+  SignupFormData,
+  LoginFormData,
+  Notification
+} from '@/models/user'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User>({
@@ -15,6 +21,8 @@ export const useUserStore = defineStore('user', () => {
     access: null,
     refresh: null
   })
+
+  const notifications = ref<Notification[]>([])
 
   const initializeStore = (): void => {
     if (localStorage.getItem('user.access')) {
@@ -129,6 +137,18 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
+  const getNotifications = (): Promise<Notification[]> => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get('/api/notifications/')
+        .then(response => {
+          notifications.value = response.data
+          resolve(response.data)
+        })
+        .catch(error => reject(error))
+    })
+  }
+
   return {
     user,
     initializeStore,
@@ -137,6 +157,8 @@ export const useUserStore = defineStore('user', () => {
     setUserInfo,
     refreshToken,
     getBaseUser,
+    getNotifications,
+    notifications,
     logout,
     login,
     signup

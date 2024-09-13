@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from 'vitest'
 import { fireEvent, render, waitFor } from '@testing-library/vue'
 import FriendsRequest from '@/components/friends/FriendsRequest.vue'
 import { CURRENT_USER_FRIENDS } from '@/tests/mocks/friends'
+import { CURRENT_USER_PROFILE } from '@/tests/mocks/profile'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { createVuetify } from 'vuetify'
@@ -42,7 +43,7 @@ describe('FriendsRequest', () => {
   test('should display friend avatar', () => {
     const { getByTestId } = createFriendsRequestComponent()
 
-    const avatar = getByTestId('avatar') as HTMLElement
+    const avatar = getByTestId('avatar')
     const avatarImg = avatar.querySelector('img')
     expect(avatarImg?.src).toBe(CURRENT_USER_FRIENDS.requests[0].created_by.get_avatar)
   })
@@ -50,6 +51,8 @@ describe('FriendsRequest', () => {
     axios.post = vi
       .fn()
       .mockResolvedValue({ data: { message: 'Friend request updated successfully' } })
+    axios.get = vi.fn().mockResolvedValue({ data: CURRENT_USER_PROFILE })
+
     const { getByText, emitted } = createFriendsRequestComponent()
 
     await fireEvent.click(getByText('Accept'))
@@ -66,6 +69,8 @@ describe('FriendsRequest', () => {
     axios.post = vi
       .fn()
       .mockResolvedValue({ data: { message: 'Friend request updated successfully' } })
+    axios.get = vi.fn().mockResolvedValue({ data: CURRENT_USER_PROFILE })
+
     const { getByText, emitted } = createFriendsRequestComponent()
 
     await fireEvent.click(getByText('Decline'))

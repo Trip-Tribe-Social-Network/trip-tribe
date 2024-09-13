@@ -23,3 +23,20 @@ export const USER_STATE = {
   access: null,
   refresh: null
 }
+
+export const NOTIFICATIONS = [
+  {
+    id: '1',
+    body: 'test notification',
+    type_of_notification: 'test',
+    post_id: '1',
+    created_for_id: '1'
+  },
+  {
+    id: '2',
+    body: 'test notification 2',
+    type_of_notification: 'test',
+    post_id: '2',
+    created_for_id: '2'
+  }
+]

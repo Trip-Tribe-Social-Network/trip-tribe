@@ -18,7 +18,7 @@ export const useFriendsStore = defineStore('friends', () => {
           requests.value = response.data.requests
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -29,12 +29,12 @@ export const useFriendsStore = defineStore('friends', () => {
         .then(response => {
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
   const handleFriendRequest = (
-    status: string,
+    status: 'accept' | 'reject',
     pk: string
   ): Promise<{ message: string }> => {
     return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ export const useFriendsStore = defineStore('friends', () => {
           }
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
