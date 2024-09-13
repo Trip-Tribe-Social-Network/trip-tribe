@@ -41,7 +41,7 @@ describe('FriendsCard', () => {
   test('should display friend avatar', () => {
     const { getByTestId } = createFriendsCardComponent()
 
-    const avatar = getByTestId('avatar') as HTMLElement
+    const avatar = getByTestId('avatar')
     const avatarImg = avatar.querySelector('img')
     expect(avatarImg?.src).toBe(CURRENT_USER_FRIENDS.friends[0].get_avatar)
   })

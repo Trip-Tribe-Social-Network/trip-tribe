@@ -45,10 +45,7 @@ const requests = computed<Request[]>(() => store.requests)
 const filteredRequests = computed(() =>
   requests.value.filter(request => request.status === 'sent')
 )
-
-const emit = defineEmits<{
-  (event: 'show-snackbar', payload: Notification): void
-}>()
+const emit = defineEmits<(event: 'show-snackbar', payload: Notification) => void>()
 
 const handleFriendshipRequest = async (status: 'accept' | 'reject', userId: string) => {
   await store
