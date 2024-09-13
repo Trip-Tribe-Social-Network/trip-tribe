@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { computed, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user'
