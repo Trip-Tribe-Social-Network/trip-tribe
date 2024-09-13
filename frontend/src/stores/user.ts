@@ -87,7 +87,7 @@ export const useUserStore = defineStore('user', () => {
           resolve(response.data)
           setUserInfo(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -121,7 +121,7 @@ export const useUserStore = defineStore('user', () => {
       axios
         .post('/api/signup/', formData)
         .then(() => resolve())
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -133,7 +133,7 @@ export const useUserStore = defineStore('user', () => {
           setToken(response.data)
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -145,7 +145,7 @@ export const useUserStore = defineStore('user', () => {
           notifications.value = response.data
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
