@@ -17,7 +17,7 @@ export const useProfileStore = defineStore('profile', () => {
           posts.value = response.data.posts
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -31,7 +31,7 @@ export const useProfileStore = defineStore('profile', () => {
           }
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
