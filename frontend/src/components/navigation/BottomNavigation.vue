@@ -34,7 +34,7 @@ import { useUserStore } from '@/stores/user'
 
 const store = useUserStore()
 
-const user = computed((): User => store.user)
+const user = computed<User>(() => store.user)
 </script>
 
 <style scoped></style>

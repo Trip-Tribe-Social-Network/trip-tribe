@@ -96,7 +96,7 @@ const router = useRouter()
 const store = useChatStore()
 const userStore = useUserStore()
 
-const user = computed((): User => userStore.user)
+const user = computed<User>(() => userStore.user)
 const avatarUrl = computed(() => user.value.avatar)
 
 onMounted(() => store.getConversations())

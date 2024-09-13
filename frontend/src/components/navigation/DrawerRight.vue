@@ -40,7 +40,7 @@ import { ref, computed } from 'vue'
 
 const store = useUserStore()
 const rightDrawer = ref(true)
-const user = computed((): User => store.user)
+const user = computed<User>(() => store.user)
 </script>
 
 <style lang="scss" scoped></style>

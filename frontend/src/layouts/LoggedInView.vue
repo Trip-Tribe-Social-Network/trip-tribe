@@ -22,14 +22,14 @@ import DrawerLeft from '@/components/navigation/DrawerLeft.vue'
 import DrawerRight from '@/components/navigation/DrawerRight.vue'
 
 const store = useUserStore()
-const userIsAuthenticated = computed(() => store.user.isAuthenticated)
+const userIsAuthenticated = computed<boolean>(() => store.user.isAuthenticated)
 
 store.getBaseUser()
 store.getNotifications()
 
 const rightDrawer = ref(true)
 const leftDrawer = ref(true)
-const bottomDrawer = computed(() => !leftDrawer.value && !rightDrawer.value)
+const bottomDrawer = computed<boolean>(() => !leftDrawer.value && !rightDrawer.value)
 </script>
 
 <style scoped></style>

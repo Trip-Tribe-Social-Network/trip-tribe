@@ -34,7 +34,7 @@ import type { UserProfile } from '@/models/profile'
 
 const store = useSearchStore()
 const searchTerm = ref('')
-const users = computed((): UserProfile[] => store.users)
+const users = computed<UserProfile[]>(() => store.users)
 
 const searchProfiles = async () => {
   await store.search(searchTerm.value)
