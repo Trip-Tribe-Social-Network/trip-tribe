@@ -87,9 +87,7 @@ const store = useFriendsStore()
 const chatStore = useChatStore()
 const isDialogVisible = ref(false)
 
-const emit = defineEmits<{
-  (event: 'show-snackbar', payload: Notification): void
-}>()
+const emit = defineEmits<(event: 'show-snackbar', payload: Notification) => void>()
 
 const handleShowSnackbar = (payload: Notification) => {
   emit('show-snackbar', payload)
