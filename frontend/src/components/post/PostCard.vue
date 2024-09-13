@@ -100,9 +100,7 @@ const liked = ref(false)
 const comments = ref(false)
 const store = usePostStore()
 
-const emit = defineEmits<{
-  (event: 'show-snackbar', payload: Notification): void
-}>()
+const emit = defineEmits<(event: 'show-snackbar', payload: Notification) => void>()
 
 const like = async () => {
   await store.likePost(props.post.id as string).then(() => {
