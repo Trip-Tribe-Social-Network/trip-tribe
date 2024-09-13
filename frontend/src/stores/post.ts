@@ -16,8 +16,7 @@ export const usePostStore = defineStore('post', () => {
           resolve(posts.value)
         })
         .catch(error => {
-          console.error('Error fetching posts:', error)
-          reject(error)
+          reject(new Error(error))
         })
     })
   }
@@ -35,8 +34,7 @@ export const usePostStore = defineStore('post', () => {
           resolve()
         })
         .catch(error => {
-          console.error('Error creating post:', error)
-          reject(error)
+          reject(new Error(error))
         })
     })
   }
@@ -50,8 +48,7 @@ export const usePostStore = defineStore('post', () => {
           resolve(trends.value)
         })
         .catch(error => {
-          console.error('Error fetching trends:', error)
-          reject(error)
+          reject(new Error(error))
         })
     })
   }
@@ -65,7 +62,7 @@ export const usePostStore = defineStore('post', () => {
           resolve(response.data)
         })
         .catch(error => {
-          reject(error)
+          reject(new Error(error))
         })
     })
   }
@@ -78,7 +75,7 @@ export const usePostStore = defineStore('post', () => {
           fetchPosts()
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
@@ -90,7 +87,7 @@ export const usePostStore = defineStore('post', () => {
           fetchPosts()
           resolve(response.data)
         })
-        .catch(error => reject(error))
+        .catch(error => reject(new Error(error)))
     })
   }
 
