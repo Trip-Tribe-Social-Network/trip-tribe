@@ -64,9 +64,7 @@ import type { Notification } from '@/models/global'
 
 const store = useUserStore()
 
-const emit = defineEmits<{
-  (event: 'show-snackbar', payload: Notification): void
-}>()
+const emit = defineEmits<(event: 'show-snackbar', payload: Notification) => void>()
 
 const visible = ref<boolean>(false)
 const email = ref<string>()
