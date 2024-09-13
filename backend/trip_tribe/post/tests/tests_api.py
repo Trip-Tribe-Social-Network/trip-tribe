@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from post.models import Post, Trend, PostAttachment
+from post.models import Post, Trend, PostAttachment, Comment
 from django.core.files.uploadedfile import SimpleUploadedFile
 import base64
 
@@ -121,3 +121,20 @@ class PostAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response_data, list)
         self.assertTrue(any(trend['hashtag'] == 'newtrend' for trend in response_data))
+
+    def test_get_post_detail(self):
+        url = reverse('post_detail', args=[self.post.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['post']['body'], 'Test Post #newtrend')
+        self.assertEqual(response.json()['post']['created_by']['name'], 'testuser')
+        self.assertEqual(response.json()['post']['created_by']['email'], 'someone@example.com')
+
+    def test_post_create_comment(self):
+        url = reverse('post_create_comment', args=[self.post.id])
+        data = {'body': 'This is a comment'}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.comments.count(), 1)
+        self.assertEqual(self.post.comments.first().body, 'This is a comment')

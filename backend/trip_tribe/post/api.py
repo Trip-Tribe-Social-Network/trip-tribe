@@ -7,8 +7,8 @@ from account.serializers import UserSerializer
 from notification.utils import create_notification
 
 from .forms import PostForm, AttachmentForm
-from .models import Post, Trend, Like
-from .serializers import PostSerializer, TrendSerializer
+from .models import Post, Trend, Like, Comment
+from .serializers import PostSerializer, TrendSerializer, PostDetailSerializer, CommentSerializer
 
 
 @api_view(['GET'])
@@ -27,6 +27,13 @@ def post_list(request):
 
     return JsonResponse(serializer.data, safe=False)
 
+@api_view(['GET'])
+def post_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+
+    return JsonResponse({
+        'post': PostDetailSerializer(post).data
+    })
 
 @api_view(['GET'])
 def post_list_profile(request, id):
@@ -108,6 +115,17 @@ def post_like(request, pk):
     else:
         return JsonResponse({'message': 'post already liked'})
     
+@api_view(['POST'])
+def post_create_comment(request, pk):
+    comment = Comment.objects.create(body=request.data.get('body'), created_by=request.user)
 
+    post = Post.objects.get(pk=pk)
+    post.comments.add(comment)
+    post.comments_count = post.comments_count + 1
+    post.save()
 
-# need to add notification for the post_create_comment function
+    notification = create_notification(request, 'post_comment', post_id=post.id)
+
+    serializer = CommentSerializer(comment)
+
+    return JsonResponse(serializer.data, safe=False)
