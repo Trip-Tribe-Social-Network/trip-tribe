@@ -10,7 +10,6 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/trip-tribe-social-network.github.io/',
   test: {
     globals: true,
     environment: 'jsdom',
