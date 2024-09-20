@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from post.models import Post, PostAttachment, Trend
+from post.models import Post, PostAttachment, Trend, Comment
 import uuid
 
 User = get_user_model()
@@ -53,3 +53,12 @@ class TrendModelTest(TestCase):
         
         self.trend.refresh_from_db()
         self.assertEqual(self.trend.occurences, 20)
+
+class CommentModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(name='testuser', email='test@example.com', password='password')
+        self.comment = Comment.objects.create(body='Test Comment', created_by=self.user)
+    def test_comment_creation(self):
+        self.assertEqual(self.comment.body, 'Test Comment')
+        self.assertEqual(self.comment.created_by, self.user)
+        self.assertTrue(isinstance(self.comment.id, uuid.UUID))
