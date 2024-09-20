@@ -53,9 +53,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def save(self, *args, **kwargs):
+        if self.image:
+            self.image = compress_image(self.image)
         super().save(*args, **kwargs)
-        if self.avatar:
-            compress_image(self.avatar.path)
 
     def get_avatar(self):
         if self.avatar:

@@ -29,9 +29,9 @@ class PostAttachment(models.Model):
     created_by = models.ForeignKey(User, related_name='post_attachments', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         if self.image:
-            compress_image(self.image.path)
+            self.image = compress_image(self.image)
+        super().save(*args, **kwargs)
 
     def get_image(self):
         if self.image:
