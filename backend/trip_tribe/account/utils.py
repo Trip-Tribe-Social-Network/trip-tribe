@@ -8,13 +8,17 @@ def compress_image(image_path, max_size_mb=1):
         if os.path.getsize(image_path) <= max_size_bytes:
             return
 
+        # Resize the image to a smaller dimension before compression
+        width, height = img.size
+        img.thumbnail((width // 2, height // 2))
+
         # Compress the image
         quality = 85  # Initial quality
         while os.path.getsize(image_path) > max_size_bytes and quality > 10:
             img.save(image_path, optimize=True, quality=quality)
             quality -= 5  # Decrease quality to further compress
 
-        # If the image is still too large, resize it
+        # If the image is still too large, resize it further
         if os.path.getsize(image_path) > max_size_bytes:
             width, height = img.size
             img.thumbnail((width // 2, height // 2))
