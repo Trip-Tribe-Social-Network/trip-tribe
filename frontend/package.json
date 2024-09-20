@@ -1,12 +1,13 @@
 {
   "name": "frontend",
   "version": "0.0.0",
+  "homepage": "https://trip-tribe-social-network.github.io/trip-tribe/",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "deploy": "vite build && gh-pages -d dist",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview",
     "test": "vitest",
     "build-only": "vite build",
