@@ -4,7 +4,7 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
-
+from .utils import compress_image 
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -52,11 +52,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.avatar:
+            compress_image(self.avatar.path)
+
     def get_avatar(self):
         if self.avatar:
-            return 'http://127.0.0.1:8000' + self.avatar.url
+            return 'https://jennychen10.pythonanywhere.com' + self.avatar.url
         else:
-            return 'http://127.0.0.1:8000/media/avatar.png'
+            return 'https://jennychen10.pythonanywhere.com/media/avatar.png'
 
 class FriendshipRequest(models.Model):
     SENT = 'sent'
