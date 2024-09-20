@@ -18,9 +18,9 @@ SECRET_KEY =  os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['jennychen10.pythonanywhere.com', '127.0.0.1']
 
-
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = ['jennychen10.pythonanywhere.com', 'http://localhost:5173']
 
 
 # Application definition
