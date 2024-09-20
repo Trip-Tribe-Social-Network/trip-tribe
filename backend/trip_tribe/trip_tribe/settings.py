@@ -22,8 +22,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-&psk#na5l=p3q8
 
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['jennychen10.pythonanywhere.com', '127.0.0.1']
-CORS_ALLOWED_ORIGINS = ['https://jennychen10.pythonanywhere.com', 'http://localhost:5173']
+ALLOWED_HOSTS = ['jennychen10.pythonanywhere.com', '127.0.0.1', 'https://trip-tribe-social-network.github.io']
+CORS_ALLOWED_ORIGINS = ['https://jennychen10.pythonanywhere.com', 'http://localhost:5173', 'https://trip-tribe-social-network.github.io']
 
 
 # Application definition
