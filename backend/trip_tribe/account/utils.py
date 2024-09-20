@@ -3,13 +3,13 @@ import os
 from io import BytesIO
 from django.core.files.base import ContentFile
 
-def compress_image(image, max_size_kb=150):
+def compress_image(image, max_size_kb=100):
     max_size_bytes = max_size_kb * 1024  # Convert KB to bytes
     img = Image.open(image)
     
     # Resize the image to a smaller dimension before compression
     width, height = img.size
-    img.thumbnail((width // 2, height // 2))
+    img.thumbnail((width // 4, height // 4))
 
     # Compress the image
     quality = 85  # Initial quality
