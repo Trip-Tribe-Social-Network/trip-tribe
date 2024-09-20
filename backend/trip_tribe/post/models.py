@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils.timesince import timesince
+from .utils import compress_image 
 
 from account.models import User
 
@@ -27,9 +28,14 @@ class PostAttachment(models.Model):
     image = models.ImageField(upload_to='post_attachments')
     created_by = models.ForeignKey(User, related_name='post_attachments', on_delete=models.CASCADE)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            compress_image(self.image.path)
+
     def get_image(self):
         if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
+            return 'https://jennychen10.pythonanywhere.com' + self.image.url
         else:
             return ''
 
