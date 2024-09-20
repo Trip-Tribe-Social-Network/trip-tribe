@@ -1,8 +1,8 @@
 from PIL import Image
 import os
 
-def compress_image(image_path, max_size_mb=1):
-    max_size_bytes = max_size_mb * 1024 * 1024  # Convert MB to bytes
+def compress_image(image_path, max_size_kb=150):
+    max_size_bytes = max_size_kb * 1024  # Convert KB to bytes
     with Image.open(image_path) as img:
         # Check if the image size is already less than the max size
         if os.path.getsize(image_path) <= max_size_bytes:
@@ -23,3 +23,6 @@ def compress_image(image_path, max_size_mb=1):
             width, height = img.size
             img.thumbnail((width // 2, height // 2))
             img.save(image_path, optimize=True, quality=quality)
+
+        # Final save to ensure the image is compressed
+        img.save(image_path, optimize=True, quality=quality)
