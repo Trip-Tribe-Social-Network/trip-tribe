@@ -2,7 +2,6 @@ import uuid
 
 from django.db import models
 from django.utils.timesince import timesince
-from .utils import compress_image 
 
 from account.models import User
 
@@ -27,11 +26,6 @@ class PostAttachment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='post_attachments')
     created_by = models.ForeignKey(User, related_name='post_attachments', on_delete=models.CASCADE)
-
-    def save(self, *args, **kwargs):
-        if self.image:
-            self.image = compress_image(self.image)
-        super().save(*args, **kwargs)
 
     def get_image(self):
         if self.image:

@@ -4,7 +4,6 @@ import uuid
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
 from django.db import models
 from django.utils import timezone
-from .utils import compress_image 
 
 class CustomUserManager(UserManager):
     def _create_user(self, name, email, password, **extra_fields):
@@ -51,11 +50,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
-
-    def save(self, *args, **kwargs):
-        if self.avatar:
-            self.avatar = compress_image(self.avatar)
-        super().save(*args, **kwargs)
 
     def get_avatar(self):
         if self.avatar:
